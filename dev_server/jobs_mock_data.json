@@ -1,0 +1,26 @@
+[{
+    "JobId": "J01-guid",
+    "JobNumber": "J01",
+    "CustomerId": "Most Wanted-guid",
+    "Added":true
+}, {
+    "JobId": "J02-guid",
+    "JobNumber": "J02",
+    "CustomerId": "Foundrey-guid",
+    "Added":false
+}, {
+    "JobId": "J03-guid",
+    "JobNumber": "J03",
+    "CustomerId": "Most Wanted-guid",
+    "Added":false
+}, {
+    "JobId": "J04-guid",
+    "JobNumber": "J04",
+    "CustomerId": "Most Wanted-guid",
+    "Added":false
+}, {
+    "JobId": "J05-guid",
+    "JobNumber": "J05",
+    "CustomerId": "Most Wanted-guid",
+    "Added":true
+}]

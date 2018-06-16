@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
 const { makeExecutableSchema } = require('graphql-tools');
+var cors = require('cors') // avoid CORS error
 
 // Some fake data
 const books = [
@@ -34,6 +35,9 @@ const schema = makeExecutableSchema({
 
 // Initialize the app
 const app = express();
+
+// fix CORS error: https://blog.graph.cool/enabling-cors-for-express-graphql-apollo-server-1ef999bfb38d
+app.use(cors())
 
 // The GraphQL endpoint
 app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }));

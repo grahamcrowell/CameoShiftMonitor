@@ -6,8 +6,9 @@ This is a local mock up of the PROD GraphQL API deployed to [AppSync](???) that 
 
 ## Quick Start
 
-```bash 
+```bash
 cd dev_server
+npm install
 node server.js
 ```
 

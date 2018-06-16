@@ -8,6 +8,7 @@ import {withClientState} from 'apollo-link-state';
 import {InMemoryCache} from 'apollo-cache-inmemory';
 // my code
 import './App.css';
+import JobsPageComplete from './components/JobsPage/JobsPageComplete'
 import JobsPage from './components/JobsPage/JobsPage'
 import { resolvers }  from './graphql/resolvers'
 
@@ -54,7 +55,7 @@ class App extends Component {
         <Router>
           <div>
             <Route exact={true} path="/" component={JobsPage}/>
-            <Route exact={true} path="/Jobs" component={JobsPage}/>
+            <Route exact={true} path="/JobsComplete" component={JobsPageComplete}/>
           </div>
         </Router>
       </ApolloProvider>

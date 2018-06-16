@@ -10,3 +10,14 @@ export const GET_JOBS = gql `
   }
 }
 `;
+
+export const GET_JOB = gql `
+  query get_job($jobId: String!) {
+    getJob(jobId: String!) {
+      JobId
+      JobNumber
+      CustomerId
+      Added
+    }
+  }
+`;

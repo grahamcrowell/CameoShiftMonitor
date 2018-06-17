@@ -12,8 +12,8 @@ export const GET_JOBS = gql `
 `;
 
 export const GET_JOB = gql `
-  query get_job($jobId: String!) {
-    getJob(jobId: String!) {
+  query getJob($jobId: String!) {
+    getJob(jobId: $jobId) {
       JobId
       JobNumber
       CustomerId
@@ -21,3 +21,4 @@ export const GET_JOB = gql `
     }
   }
 `;
+

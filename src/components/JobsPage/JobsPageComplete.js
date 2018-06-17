@@ -1,11 +1,15 @@
 import React, {Component} from 'react';
 import {Query, Mutation} from 'react-apollo';
 import {GET_JOBS} from '../../graphql/queries';
-import {TOGGLE_JOB} from '../../graphql/resolvers';
+import {TOGGLE_JOB} from '../../graphql/mutations';
 
 
+/** DEPRECATED
+ * monolithic Page component with a list
 
-
+ * @class JobPage
+ * @extends {Component}
+ */
 class JobPage extends Component {
     render() {
         console.log("JobPage.render()")
@@ -23,7 +27,6 @@ class JobPage extends Component {
                                 .map(({JobId, Added}) => {
                                     return (
                                         <Mutation mutation={TOGGLE_JOB} 
-                                            
                                             key={JobId}
                                             update={(cache, { data: { updateJob } }) => {
                                                 console.log("button PRESSED -> Mutate: JobId="+String(JobId)+"\n")
@@ -34,7 +37,6 @@ class JobPage extends Component {
                                                     return key;
                                                 });
                                                 const { jobs } = cache.readQuery({ query: GET_JOBS });
-                                                
                                                 let key = 0;
                                                 while (key<data.jobs.length) {
                                                     if(jobs[key].JobId === JobId) {
@@ -44,7 +46,6 @@ class JobPage extends Component {
                                                         key ++;
                                                     }
                                                 }
-                                                
                                                 jobs[key].Added=!jobs[key].Added
                                                 cache.writeQuery({
                                                   query: GET_JOBS,

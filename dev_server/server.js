@@ -3,10 +3,15 @@ const bodyParser = require('body-parser');
 const {graphqlExpress, graphiqlExpress} = require('apollo-server-express');
 const {makeExecutableSchema} = require('graphql-tools');
 const { find, filter } = require('lodash')
-var cors = require('cors') // fix CORS error
+var sprintf = require("sprintf-js").sprintf; // string utility library
 
+var cors = require('cors') // fix CORS error
 // Some fake data
 var jobs = require('./jobs_mock_data.json');
+var config = require('../src/config.json');
+
+const GRAPHQL_ENDPOINT = config["GRAPHQL_ENDPOINT"];
+const GRAPHQL_PORT = config["GRAPHQL_PORT"];
 
 // The GraphQL schema in string form
 const typeDefs = `
@@ -57,26 +62,27 @@ const resolvers = {
 goto: server page: http://localhost:3000/graphiql
 try these graph ql examples:
 
-query GetJob {
-  jobs {
+query GET_JOB($jobId_var: String!) {
+  getJob(jobId: $jobId_var) {
     JobId
   }
 }
 
-query GetAllJobs {
+query GET_JOBS {
   jobs {
     JobId
     JobNumber
     CustomerId
-  Added
+    Added
   }
 }
 
-mutation AddJob($jobId_var: String!) {
+mutation TOGGLE_JOB($jobId_var: String!) {
   toggleJob(JobId: $jobId_var) {
     JobId
   }
 }
+
 
 // query variables
 {
@@ -102,6 +108,7 @@ app.use('/graphql', bodyParser.json(), graphqlExpress({schema}));
 app.use('/graphiql', graphiqlExpress({endpointURL: '/graphql'}));
 
 // Start the server
-app.listen(3000, () => {
-    console.log('Go to http://localhost:3000/graphiql to run queries!');
+app.listen(GRAPHQL_PORT, () => {
+    let message = sprintf("Go to %s/graphiql to run queries!",GRAPHQL_ENDPOINT)
+    console.log(message);
 });

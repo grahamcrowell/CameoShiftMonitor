@@ -6,45 +6,38 @@ import ApolloClient from "apollo-boost";
 import {ApolloProvider} from "react-apollo";
 import {withClientState} from 'apollo-link-state';
 import {InMemoryCache} from 'apollo-cache-inmemory';
+// utility
+import {sprintf} from "sprintf-js"; // string utility library
+
 // my code
 import './App.css';
 import JobsPageComplete from './components/JobsPage/JobsPageComplete'
 import JobsPage from './components/JobsPage/JobsPage'
-import { resolvers }  from './graphql/resolvers'
 
-// type Job @client {
-//   JobId: String!,
-//   JobNumber: String,
-//   CustomerId: String,
-//   Added: Boolean
-// }
+var config = require('./config.json');
+const GRAPHQL_ENDPOINT = config["GRAPHQL_ENDPOINT"];
+const GRAPHQL_PORT = config["GRAPHQL_PORT"];
 
+/** Client side schema (optional)
+ * https://www.apollographql.com/docs/react/essentials/local-state.html#schema
+ */
 const typeDefs = `
   type Query {
     jobs: [Job]
+    getJob(jobId: String!): Job
   }
 `;
 
-// set initial state (not used - state read from GraphQL server at start up)
-// const defaults = {
-//   jobs: [
-//     {
-//       JobId: "J01-guid",
-//       JobNumber: "J1801",
-//       CustomerId: "customer-guid",
-//       Added: false,
-//       __typename: "Job"
-//     },
-//   ]
-// }
-
-// Apollo cache to local state
+// Apollo cache stores local state
 const cache = new InMemoryCache();
+
+const graphql_endpoint = sprintf("%s:%d/graphql", GRAPHQL_ENDPOINT, GRAPHQL_PORT);
+console.log(graphql_endpoint);
 // init apollo graphql client
 const client = new ApolloClient({
   cache,
-  uri: "http://localhost:3000/graphql", // local dev server (see dev_server folder)
-  link: withClientState({ resolvers, cache, typeDefs }),
+  uri: graphql_endpoint, // local dev server (see dev_server folder)
+  link: withClientState({ cache, typeDefs }),
 });
 
 // App entry point

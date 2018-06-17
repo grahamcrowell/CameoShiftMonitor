@@ -1,16 +1,14 @@
 import React, {Component} from 'react';
-import {Query, Mutation} from 'react-apollo';
+import {Query} from 'react-apollo';
 import {GET_JOBS} from '../../graphql/queries';
-import {TOGGLE_JOB} from '../../graphql/resolvers';
 import JobList from './JobList'
-
 
 
 class JobPage extends Component {
     render() {
         console.log("JobPage.render()")
         return (
-            [
+            <div>
             <h1>JobsPage</h1>,
             <Query query={GET_JOBS}>
                 {({loading, error, data}) => {
@@ -21,11 +19,12 @@ class JobPage extends Component {
                     else 
                         return <div>
                             <JobList jobs={data.jobs}/>
-                            
                         </div>
                 }}
-            </Query>]
+            </Query>
+            </div>
         );
     }
 }
+
 export default JobPage

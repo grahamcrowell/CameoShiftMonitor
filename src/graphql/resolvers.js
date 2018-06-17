@@ -1,5 +1,12 @@
 import gql from 'graphql-tag';
 
+/**
+ * ???
+ * MAYBE NOT USEFUL
+ * could be passed to withClientState
+ * in App.js ApolloClient
+ * ???
+ */
 export const resolvers = {
   Mutation: {
     toggleJob: (_, variables, { cache }) => {
@@ -17,14 +24,3 @@ export const resolvers = {
     },
   },
 };
-
-export const TOGGLE_JOB = gql `
-  mutation toggleJob($JobId: String!) {
-    toggleJob(JobId: $JobId) {
-        JobId
-        JobNumber
-        CustomerId
-        Added
-    }
-  }
-`;

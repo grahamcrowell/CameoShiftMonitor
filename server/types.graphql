@@ -1,0 +1,44 @@
+# projectId: cjf1zqzvy2n6w0151dfxo8ny6
+# version: 25
+
+type File @model {
+  contentType: String!
+  createdAt: DateTime!
+  id: ID! @isUnique
+  name: String!
+  secret: String! @isUnique
+  size: Int!
+  updatedAt: DateTime!
+  url: String! @isUnique
+}
+
+type User @model {
+  createdAt: DateTime!
+  id: ID! @isUnique
+  updatedAt: DateTime!
+}
+
+type Customer @model {
+  id: ID! @isUnique
+  customerName: String!
+}
+
+type Job @model {
+  id: ID! @isUnique
+  jobName: String!
+  trusses: [Truss!]! @relation(name: "JobOnTruss")
+}
+
+type Truss @model {
+  id: ID! @isUnique
+  trussName: String!
+  trussQuantity: Int!
+  trussSpan: Float!
+  trussFabPoints: Float!
+  job: Job @relation(name: "JobOnTruss")
+}
+
+type Shift @model {
+  id: ID! @isUnique
+  shiftAssemberCount: Int
+}

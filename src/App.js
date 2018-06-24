@@ -12,7 +12,7 @@ import {sprintf} from "sprintf-js"; // string utility library
 // my code
 import './App.css';
 import JobsPageComplete from './components/JobsPage/JobsPageComplete'
-import JobPageWithGraphQL from './components/JobsPage/Job'
+import JobPageWithGraphQL from './components/JobsPage/JobList'
 
 var config = require('./config.json');
 const GRAPHQL_ENDPOINT = config["GRAPHQL_ENDPOINT"];

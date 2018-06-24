@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Mutation} from 'react-apollo';
-import {GET_JOBS} from '../../graphql/queries';
-import {TOGGLE_JOB} from '../../graphql/mutations';
-
+import {graphql, compose} from 'react-apollo'
+import gql from 'graphql-tag'
+var sprintf = require("sprintf-js").sprintf;
 /** renders a JobList element
- * 
+ *
  * expected props:
  * - jobId: String
  * - job: Job
@@ -14,66 +13,83 @@ import {TOGGLE_JOB} from '../../graphql/mutations';
 class JobListElement extends React.Component {
     render() {
         console.log("JobListElement.render()")
-        const {jobId, job} = this.props;
-        console.log("job.JobId="+String(job.JobId)+"\n")
-        console.log("job.Added="+String(job.Added)+"\n")
+        const {job} = this.props;
+        // console.log("job.id="+String(job.id)+"\n")
+        // console.log("job.Added="+String(job.Added)+"\n")
         return (
-            <div>
-                <h3>Job List Element {job.JobId}</h3>
-                <Mutation mutation={TOGGLE_JOB} 
-                    key={jobId}
-                    /** 
-                     * update prop applies mutation to local state by updating Apollo cache 
-                     * @prop toggleJobFunc is a "?function placeholder?" that forwards params to TOGGLE_JOB
-                     * 
-                    */
-                    update={(cache, { data: { toggleJobFunc } }) => {
-                        console.log("Mutate: JobId=%s from current value: Added=%s\n",String(job.JobId),String(job.Added))
-                        /** get copy of current state (ie before button click) by querying the cache */
-                        const { jobs } = cache.readQuery({ query: GET_JOBS });
-                        /** find index of current job in jobs array */
-                        let current_job_index = 0;
-                        while (current_job_index<jobs.length) {
-                            if(jobs[current_job_index].JobId === job.JobId) {
-                                break
-                            }
-                            else {
-                                current_job_index ++;
-                            }
-                        }
-                        /** update Added attribute of current job in jobs array */
-                        jobs[current_job_index].Added=!jobs[current_job_index].Added
-                        /** update state by writing updated jobs array to cache */
-                        cache.writeQuery({
-                          query: GET_JOBS,
-                          data: {"jobs":jobs}
-                        });
-                      }
-                    }
-                    >
-                    {toggleJobFunc => (
-                        /** render HTML text elements and button */
-                        <div key={job.JobId}>
-                            <p>JobId={job.JobId}</p>
-                            <p>Added={job.Added === true ? "true": "false"}</p>
-                            <button onClick={e => {
-                                e.preventDefault();
-                                /** render HTML text elements and button */
-                                toggleJobFunc({ variables: { JobId:jobId } });
-                            }}>
-                                Add Job To This Shift
-                            </button>
-                        </div>
-                    )}
-                </Mutation>
+            <div id>
+                <h3>Job List Element {job.id}</h3>
+                <div key={job.id}>
+                    <p>jobName={job.jobName}</p>
+                    <p>Added={job.Added === true
+                            ? "true"
+                            : "false"}</p>
+                    <button
+                        onClick={this.handleDelete}>
+                        Add Job To This Shift
+                    </button>
+                </div>
             </div>
         );
     }
+
+    handleDelete = async() => {
+        console.log(sprintf("handleDelete %s", this.props));
+        Object.keys(this.props).forEach(key => {
+            console.log(sprintf("this.props[%s]=%s", key, String(this.props[key])));
+            console.log(sprintf("this.props[%s]=%s", key, String(this.props.job)));
+        });
+        await this
+            .props
+            .deleteJobMutation({
+                variables: {
+                    id: this.props.job.id
+                }
+            })
+        this
+            .props
+            .history
+            .replace('/')
+    }
 }
 
-JobListElement.propTypes = {
-    job: PropTypes.object.isRequired,
-    jobId: PropTypes.string.isRequired
-};
+const DELETE_POST_MUTATION = gql`
+  mutation DeleteJobMutation($id: ID!) {
+    deleteJob(id: $id) {
+      id
+    }
+  }
+`
 
-export default JobListElement;
+const POST_QUERY = gql`
+  query PostQuery($id: ID!) {
+    Job(id: $id) {
+      id
+      jobName
+    }
+  }
+`
+
+// JobListElement.propTypes = {
+//     job: PropTypes.object.isRequired,
+//     id: PropTypes.string.isRequired
+// };
+
+
+const DetailPageWithGraphQL = compose(
+    graphql(POST_QUERY, {
+      name: 'postQuery',
+      // see documentation on computing query variables from props in wrapper
+      // http://dev.apollodata.com/react/queries.html#options-from-props
+      options: ({match}) => ({
+        variables: {
+          id: match,
+        },
+      }),
+    }),
+    graphql(DELETE_POST_MUTATION, {
+      name: 'deleteJobMutation'
+    })
+  )(JobListElement)
+
+export default graphql(DELETE_POST_MUTATION)(DetailPageWithGraphQL);

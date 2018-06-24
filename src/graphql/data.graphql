@@ -1,0 +1,32 @@
+mutation {
+  createJob(
+  jobName:"18001",
+    trusses: [{
+      trussName:"T01"
+      trussSpan:120.5
+      trussFabPoints:123.89
+      trussQuantity:132
+    },
+    {
+      trussName:"T02"
+      trussSpan:213
+      trussFabPoints:123.89
+      trussQuantity:132
+    },
+    {
+      trussName:"J02"
+      trussSpan:213
+      trussFabPoints:123.89
+      trussQuantity:132
+    },
+    {
+      trussName:"T04"
+      trussSpan:213
+      trussFabPoints:123.89
+      trussQuantity:132
+    }
+    ]) 
+  {
+      id
+  }
+}

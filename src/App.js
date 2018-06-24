@@ -9,34 +9,19 @@ import {InMemoryCache} from 'apollo-cache-inmemory';
 // utility
 import {sprintf} from "sprintf-js"; // string utility library
 
-// my code
 import './App.css';
-import JobsPageComplete from './components/JobsPage/JobsPageComplete'
+// my code
 import JobPageWithGraphQL from './components/JobsPage/JobList'
-
-var config = require('./config.json');
-const GRAPHQL_ENDPOINT = config["GRAPHQL_ENDPOINT"];
-const GRAPHQL_PORT = config["GRAPHQL_PORT"];
-
-/** Client side schema (optional)
- * https://www.apollographql.com/docs/react/essentials/local-state.html#schema
- */
-const typeDefs = `
-  type Query {
-    jobs: [Job]
-    getJob(jobId: String!): Job
-  }
-`;
 
 // Apollo cache stores local state
 const cache = new InMemoryCache();
 
 const graphql_endpoint = "https://api.graph.cool/simple/v1/cjf1zqzvy2n6w0151dfxo8ny6";
-console.log(graphql_endpoint);
-// init apollo graphql client
+console.log(sprintf("graphql endpoint: %s", graphql_endpoint));
+
 const client = new ApolloClient({
   cache,
-  uri: graphql_endpoint, // local dev server (see dev_server folder)
+  uri: graphql_endpoint,
   link: withClientState({ cache }),
 });
 
@@ -48,7 +33,6 @@ class App extends Component {
         <Router>
           <div>
             <Route exact={true} path="/" component={JobPageWithGraphQL}/>
-            <Route exact={true} path="/JobsComplete" component={JobsPageComplete}/>
           </div>
         </Router>
       </ApolloProvider>

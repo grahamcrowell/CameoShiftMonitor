@@ -1,14 +1,10 @@
 import React, {Component} from 'react';
-import {graphql, compose} from 'react-apollo'
+import {graphql} from 'react-apollo'
 import gql from 'graphql-tag'
 import JobListElement from './JobListElement'
 var sprintf = require("sprintf-js").sprintf;
-class JobList extends Component {
 
-    // constructor(props) {
-    //     super(props);
-    //     // this.bind = this.props.bind
-    // }
+class JobList extends Component {
 
     render() {
         if (this.props.allJobsQuery.loading) {
@@ -21,10 +17,6 @@ class JobList extends Component {
             )
         }
 
-        const {Jobs} = this.props.allJobsQuery
-        // Object.keys(this.props).foreach(key =>(
-        //     console.log(sprintf("this.props.%s=%s", key, this.props[key]))
-        // ));
         console.log(sprintf("this.props = %s", String(this.props)));
         Object.keys(this.props).forEach(key => {
             console.log(sprintf("this.props.%s=...", String(key)));
@@ -41,11 +33,6 @@ class JobList extends Component {
         console.log(sprintf("this.props.match.params=%s", String(this.props.match.params.length)));
         console.log(sprintf("this.props.match.params=%s", String(this.props.match.params)));
 
-        // Object.keys(this.props.match.params).forEach(key => {
-        //     // console.log(sprintf("this.props.match.params.%s=?", String(key)));
-        //     console.log(sprintf("this.props.match.params.%s=?", String(Object.keys(this.props.match.params))));
-        // });
-
         return (
             <div>
                 {this
@@ -53,9 +40,9 @@ class JobList extends Component {
                     .allJobsQuery
                     .allJobs
                     .map(job => (
-                        <div id>
+                        <div key={job.id}>
                             <h1>{job.jobName}</h1>
-                            <JobListElement job={job}/>
+                            <JobListElement key={job.id} job={job}/>
                         </div>
                     ))}
             </div>
@@ -68,6 +55,10 @@ const ALL_JOBS_QUERY = gql `
     allJobs {
         id
         jobName
+        trusses {
+            id
+            trussName
+        }
     }
   }
 `
@@ -80,7 +71,5 @@ const JobPageWithGraphQL = graphql(ALL_JOBS_QUERY, {
         fetchPolicy: 'network-only'
     }
 })(JobList)
-
-// const JobPageWithDelete = graphql(DELETE_POST_MUTATION)(JobPageWithGraphQL)
 
 export default JobPageWithGraphQL
